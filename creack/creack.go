@@ -1,4 +1,4 @@
-package shell
+package creack
 
 import (
 	"errors"
@@ -10,7 +10,7 @@ import (
 	"github.com/creack/pty"
 )
 
-func Creack(w io.Writer, command string, args []string) error {
+func Run(w io.Writer, command string, args []string) error {
 	cmd := exec.Command(command, args...)
 	fh, err := pty.Start(cmd)
 	if err != nil {

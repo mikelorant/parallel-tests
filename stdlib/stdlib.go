@@ -1,4 +1,4 @@
-package shell
+package stdlib
 
 import (
 	"bytes"
@@ -9,9 +9,7 @@ import (
 	"os/exec"
 )
 
-func main() {}
-
-func Stdlib(w io.Writer, command string, args []string) error {
+func Run(w io.Writer, command string, args []string) error {
 	var buf bytes.Buffer
 
 	cmd := exec.Command(command, args...)

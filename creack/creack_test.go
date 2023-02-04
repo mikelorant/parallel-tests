@@ -1,15 +1,43 @@
-package shell_test
+package creack_test
 
 import (
+	"bytes"
+	"errors"
 	"io"
+	"io/fs"
 	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"test"
+	"test/creack"
 )
 
-func TestStdlib(t *testing.T) {
+type badBuffer struct {
+	buf bytes.Buffer
+	err error
+}
+
+func (b *badBuffer) Write(p []byte) (int, error) {
+	if b.err != nil {
+		return 0, b.err
+	}
+
+	return b.buf.Write(p)
+}
+
+func (b *badBuffer) Read(p []byte) (int, error) {
+	return b.buf.Read(p)
+}
+
+var (
+	errMock         = errors.New("error")
+	errMockCopyPath = &fs.PathError{
+		Path: "/dev/pmtx",
+		Err:  errMock,
+	}
+)
+
+func TestCeack(t *testing.T) {
 	t.Parallel()
 
 	type args struct {
@@ -86,7 +114,7 @@ func TestStdlib(t *testing.T) {
 				err: tt.args.err,
 			}
 
-			err := shell.Stdlib(buf, tt.args.command, tt.args.args)
+			err := creack.Run(buf, tt.args.command, tt.args.args)
 			if tt.want.err != "" {
 				assert.Error(t, err)
 				assert.ErrorContains(t, err, tt.want.err)

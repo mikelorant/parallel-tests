@@ -1,4 +1,4 @@
-package shell_test
+package stdlib_test
 
 import (
 	"bytes"
@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"test"
+	"test/stdlib"
 )
 
 type badBuffer struct {
@@ -114,7 +114,7 @@ func TestCeack(t *testing.T) {
 				err: tt.args.err,
 			}
 
-			err := shell.Stdlib(buf, tt.args.command, tt.args.args)
+			err := stdlib.Run(buf, tt.args.command, tt.args.args)
 			if tt.want.err != "" {
 				assert.Error(t, err)
 				assert.ErrorContains(t, err, tt.want.err)
