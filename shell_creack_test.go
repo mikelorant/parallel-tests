@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"test"
 	"github.com/stretchr/testify/assert"
+	"test"
 )
 
 type badBuffer struct {

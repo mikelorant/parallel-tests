@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"test"
 	"github.com/stretchr/testify/assert"
+	"test"
 )
 
 func TestStdlib(t *testing.T) {
