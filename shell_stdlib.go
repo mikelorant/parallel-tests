@@ -1,20 +1,22 @@
 package shell
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"io"
 	"io/fs"
 	"os/exec"
-
-	"github.com/creack/pty"
 )
 
 func main() {}
 
-func Run(w io.Writer, command string, args []string) error {
+func Stdlib(w io.Writer, command string, args []string) error {
+	var buf bytes.Buffer
+
 	cmd := exec.Command(command, args...)
-	fh, err := pty.Start(cmd)
+	cmd.Stdout = &buf
+	err := cmd.Run()
 	if err != nil {
 		var execError *exec.Error
 
@@ -24,9 +26,8 @@ func Run(w io.Writer, command string, args []string) error {
 
 		return fmt.Errorf("unable to exec command: %w", err)
 	}
-	defer fh.Close()
 
-	if _, err = io.Copy(w, fh); err != nil {
+	if _, err = io.Copy(w, &buf); err != nil {
 		var pathError *fs.PathError
 
 		if !errors.As(err, &pathError) {
